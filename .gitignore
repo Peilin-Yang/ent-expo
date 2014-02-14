@@ -3,6 +3,6 @@
 *.pyc
 
 env/
-test/
+playground/
 
 
