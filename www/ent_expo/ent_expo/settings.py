@@ -30,12 +30,14 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = (
+    # Uncomment the next line to enable the admin:
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'search'
 )
 
 MIDDLEWARE_CLASSES = (
@@ -57,8 +59,12 @@ WSGI_APPLICATION = 'ent_expo.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'xliu_ent_test',
+        'USER': 'xliu',
+        'PASSWORD': '123',
+        'HOST': '127.0.0.1',
+        'PORT': '8889'
     }
 }
 
