@@ -3,15 +3,16 @@ from django.db import models
 # Create your models here.
 
 class Query(models.Model) :
-  index = models.IntegerField()
+  query_id = models.IntegerField()
   title = models.CharField(max_length=100)
-  desc = models.CharField(max_length=256)
+  description = models.CharField(max_length=512)
 
   def __unicode__(self) :
     return '%d - [%s]' %(index, title)
 
 class Document(models.Model) :
   doc_id = models.CharField(max_length=20)
+  title = models.TextField()
   text = models.TextField()
   stem = models.TextField()
 
