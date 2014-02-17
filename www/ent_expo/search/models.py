@@ -8,7 +8,7 @@ class Query(models.Model) :
   description = models.CharField(max_length=512)
 
   def __unicode__(self) :
-    return '%d - [%s]' %(index, title)
+    return '%d - [%s]' %(self.query_id, self.title)
 
 class Document(models.Model) :
   doc_id = models.CharField(max_length=20)
@@ -17,7 +17,7 @@ class Document(models.Model) :
   stem = models.TextField()
 
   def __unicode__(self) :
-    return 'Doc - %s' % doc_id
+    return 'Doc - %s' % self.doc_id
 
 class DocMap(models.Model) :
   query = models.ForeignKey(Query)
@@ -25,7 +25,7 @@ class DocMap(models.Model) :
   is_rel = models.BooleanField()
 
   def __unicode__(self) :
-    return '%s - %s - %d' %(self.query.index, self.doc.doc_id,
+    return '%s - %s - %d' %(self.query.query_id, self.doc.doc_id,
         self.is_rel)
 
 class DocRank(models.Model) :
@@ -34,6 +34,6 @@ class DocRank(models.Model) :
   rank = models.IntegerField()
 
   def __unicode__(self) :
-    return '%s - %d - %s' %(self.query.index, self.rank,
+    return '%s - %d - %s' %(self.query.query_id, self.rank,
         self.doc.doc_id)
 
