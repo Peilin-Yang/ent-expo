@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div id="query_list">
+  <h1>Queries</h1>
+  <ul>
+    {% for query in query_list %}
+    <li>
+      <p class="query">{{query.query_id }} - 
+      <a href="query/{{query.query_id}}">{{ query.title}}</a>
+      </p>
+    </li>
+    {% endfor %}
+  </ul>
+</div>
+{% endblock %}
