@@ -1,20 +1,60 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" lang="en-US">
-{% load staticfiles %}
-
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <title>{% block title %} EntEXPO {% endblock %}</title>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-  <link rel="stylesheet" id="main-css"  href="{% static "search/css/style.css"  %}" type="text/css" media="all" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="">
   <meta name="robots" content="noindex,nofollow" />
-</head>
-<body>
+  {% load staticfiles %}
 
+  <!-- Bootstrap core CSS -->
+  <link href="{% static "search/bootstrap/css/bootstrap.min.css" %}" rel="stylesheet">
+  <!-- Bootstrap theme -->
+  <link href="{% static "search/bootstrap/css/bootstrap-theme.min.css" %}" rel="stylesheet">
+  <!-- Custom styles for this template -->
+  <link href="{% static "search/css/theme.css" %}" rel="stylesheet">
+
+  <title>{% block title %} EntEXPO {% endblock %}</title>
+  {% block header %}{% endblock %}
+</head>
+<body role="document">
+  <!-- Fixed navbar -->
+  <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="#">EntExpo</a>
+      </div>
+      <div class="navbar-collapse collapse">
+        <ul class="nav navbar-nav">
+          <li class="active"><a href="#">Home</a></li>
+          <li><a href="#about">About</a></li>
+        </ul>
+      </div><!--/.nav-collapse -->
+    </div>
+  </div>
+
+<div class="container theme-showcase" role="main">
 {% block content %}{% endblock %}
+</div>
 
 <div id='footer'>
   <div id='dj-logo'><a href="http://www.djangoproject.com/"><img src="{% static "search/images/django.gif" %}" border="0" alt="Made with Django." title="Made with Django." /></a></div>
   <p>&copy;Xitong Liu - xtliu [at] udel.edu</p>
 </div>
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="{% static "search/js/jquery.min.js" %}"></script>
+<script src="{% static "search/bootstrap/js/bootstrap.min.js" %}"></script>
+<script src="{% static "search/js/draw.js" %}"></script>
 </body>
 </html>
