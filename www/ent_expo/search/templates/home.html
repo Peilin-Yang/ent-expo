@@ -1,16 +1,51 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div id="query_list">
-  <h1>Queries</h1>
-  <ul>
-    {% for query in query_list %}
-    <li>
-      <p class="query">{{query.query_id }} - 
-      <a href="query/{{query.query_id}}">{{ query.title}}</a>
-      </p>
-    </li>
-    {% endfor %}
-  </ul>
+<div class="row" id="home_search">
+  <div class="col-md-3" id="home_logo">
+    <h1>EntEXPO</h1>
+  </div>
+  <div class="col-md-9" id="home_search_form">
+    <form name="search-form" role="form" id="search_form">
+      <div class="row">
+        <div class="form-group col-md-8">
+          <label class="sr-only" for="searchQuery">Enter query</label>
+          <input id="searchQuery" class="form-control" type="text" spellcheck="false" title="Search" maxlength="1024" placeholder="Enter Query" autocomplete="off"/>
+        </div>
+        <div class="col-md-4">
+          <button alt="Search" class="btn btn-primary" type="submit" data-toggle="modal" data-target="#queryModal">Search</button>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal fade" id="queryModal" tabindex="-1" role="dialog" aria-labelledby="queryModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h4 class="modal-title" id="queryModalLabel">Select Queries</h4>
+        </div>
+        <div class="modal-body">
+          <div id="query_list">
+            <ul>
+              {% for query in query_list %}
+              <li>
+                <p class="query">{{query.query_id }} - 
+                <a href="query/{{query.query_id}}">{{ query.title}}</a>
+                </p>
+              </li>
+              {% endfor %}
+            </ul>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 {% endblock %}
