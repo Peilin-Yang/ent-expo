@@ -19,16 +19,35 @@ body {
 /*
 /**********************************************************/
 
-div#home_logo{
-  padding-left: 100px;
+div#home_search_container{
+  position: relative;
+  height: 80%;
 }
 
 div#home_search{
-  margin:300px auto 100px;
+  width: 90%;
+  height: 15%;
+  overflow: auto;
+  margin: auto;
+  position: absolute;
+  top: 0; left: 0; bottom: 0; right: 0;
+}
+
+div#home_logo{
+  padding-left: 250px;
 }
 
 div#home_search_form{
   padding-top: 25px;
+}
+
+div.ql a.list-group-item{
+  padding: 3px 15px;
+}
+
+div#query_pg{
+  margin: 0px auto;
+  width: 85%;
 }
 
 /**********************************************************/
@@ -39,6 +58,9 @@ div#home_search_form{
 div#footer{
   margin: 1.5em auto;
   width: 400px;
+  position: absolute;
+  left: 35%;
+  bottom: 0;
 }
 
 div#footer p{
@@ -46,7 +68,15 @@ div#footer p{
 }
 
 div#footer div#dj-logo{
-	margin-top:-5px;
+	margin-right: 40px;
 	float: right;
 }
 
+div.message_container{
+  margin: 8em auto; width:50em;
+}
+
+p.message{
+  padding: 15px;
+  margin: 50px 0px;
+}

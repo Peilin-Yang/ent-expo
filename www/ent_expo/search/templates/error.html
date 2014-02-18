@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="message_container">
+  <h1>Oops. An error has occurred.</h1>
+  {% if error_message %}
+    {% if error_message %}
+    <p class="bg-danger message">{{ error_message }}</p>
+    {% endif %}
+  {% endif %}
+</div>
+{% endblock %}
