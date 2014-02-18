@@ -5,17 +5,20 @@ function loadQueryList(){
     $.getJSON("query_list", function(data){
       // apply pagination on the query list
       var num_per_list = 20;
+      var query_sm_info = ' <small>' + data.length + ' queries in total.</small>';
+      $('div#queryModal h4.modal-title').append(query_sm_info);
+      
       var ul_num = data.length / num_per_list;
       for(var i = 0; i < ul_num; ++i){
         // one list for every num_per_list queries
         var ul_item = '<div class="ql list-group" id="ql_' + i + '"></div>';
-        query_list = $(ul_item);
+        var query_list = $(ul_item);
         
         for (var j = 0; j < num_per_list; ++j) {
           if(num_per_list * i + j >= data.length){
             break;
           }
-          query = data[num_per_list * i + j];
+          var query = data[num_per_list * i + j];
           var li_item = '<a class="list-group-item" attr="' + query.id 
             + '" href="#">' +  query.id + ' - ' + query.title + '</a>';
           query_list.append(li_item);
@@ -58,8 +61,8 @@ function loadQueryList(){
         query_id = $(this).attr('attr');
         query_text = $(this).text().split(' - ')[1];
         // set the query id and query text in the search box
-        $("input[name='search_query']").val(query_text);
         $("input[name='query_id']").val(query_id);
+        $("input[name='query_text']").val(query_text);
         $('#queryModal').modal('toggle');
         return false;
       });
@@ -67,7 +70,7 @@ function loadQueryList(){
   }
 }
 
-$("input[name='search_query']").focus(function(){
+$("input[name='query_text']").focus(function(){
   loadQueryList();
   // now show up the modal
   $('#queryModal').modal('toggle');

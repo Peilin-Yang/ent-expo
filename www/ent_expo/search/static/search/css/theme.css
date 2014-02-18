@@ -19,25 +19,24 @@ body {
 /*
 /**********************************************************/
 
-div#home_search_container{
-  position: relative;
-  height: 80%;
-}
-
-div#home_search{
+div#home_container{
   width: 90%;
   height: 15%;
   overflow: auto;
   margin: auto;
   position: absolute;
-  top: 0; left: 0; bottom: 0; right: 0;
+  top: 0; 
+  left: 0; 
+  bottom: 0; 
+  right: 0;
 }
 
-div#home_logo{
-  padding-left: 250px;
+div#home_container div#logo h1{
+  position: absolute;
+  right: 20px;
 }
 
-div#home_search_form{
+div#home_container div#search_form{
   padding-top: 25px;
 }
 
@@ -52,14 +51,29 @@ div#query_pg{
 
 /**********************************************************/
 /*
+/* Search Page
+/*
+/**********************************************************/
+
+div#search_container{
+  width: 90%;
+  height: 15%;
+  overflow: auto;
+  margin: -20px auto;
+}
+
+div#search_container div#search_form{
+  padding-top: 25px;
+}
+
+/**********************************************************/
+/*
 /* Miscellaneous
 /*
 /**********************************************************/
 div#footer{
-  margin: 1.5em auto;
-  width: 400px;
+  width: 100%;
   position: absolute;
-  left: 35%;
   bottom: 0;
 }
 
@@ -67,13 +81,9 @@ div#footer p{
 	text-align: center;
 }
 
-div#footer div#dj-logo{
-	margin-right: 40px;
-	float: right;
-}
-
 div.message_container{
-  margin: 8em auto; width:50em;
+  margin: 8em auto;
+  width:50em;
 }
 
 p.message{

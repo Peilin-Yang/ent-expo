@@ -45,8 +45,17 @@
 </div>
 
 <div id="footer">
-  <div id="dj-logo"><a href="http://www.djangoproject.com/"><img src="{% static "search/images/djangosite80x15_grey.gif" %}" alt="Made with Django." title="Made with Django." /></a></div>
-  <p >&copy;Xitong Liu - xtliu [at] udel.edu</p>
+  <div class="row">
+    <div class="col-md-4"></div>
+    <div class="col-md-4">
+      <p >&copy;Xitong Liu - xtliu [at] udel.edu 
+        <a href="http://www.djangoproject.com/">
+          <img src="{% static "search/images/djangosite80x15_grey.gif" %}" alt="Made with Django." title="Made with Django." />
+        </a>
+      </p>
+    </div>
+    <div class="col-md-4"></div>
+  </div>
 </div>
 
 <!-- Bootstrap core JavaScript
@@ -55,5 +64,6 @@
 <script src="{% static "search/js/jquery.min.js" %}"></script>
 <script src="{% static "search/bootstrap/js/bootstrap.min.js" %}"></script>
 <script src="{% static "search/js/main.js" %}"></script>
+{% block footer %}{% endblock %}
 </body>
 </html>
