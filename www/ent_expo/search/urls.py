@@ -7,6 +7,6 @@ urlpatterns = patterns('',
     name='search_query'),
   url(r'^doc/(?P<doc_id>\d+)$', 'search.views.document',
     name='search_ducument'),
-  url(r'^rank$', 'search.views.rank', name='search_rank'),
+  url(r'^rank/(?P<query_id>\d+)$', 'search.views.rank', name='search_rank'),
   url(r'^search$', 'search.views.search', name='search_search'),
 )

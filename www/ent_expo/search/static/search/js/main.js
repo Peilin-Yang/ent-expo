@@ -76,7 +76,7 @@ $("input[name='query_text']").focus(function(){
   $('#queryModal').modal('toggle');
 });
 
-$('form#search_form').submit(function(event){
+$('div#home_container form#search_form').submit(function(event){
   // if no query is selected, prevent it from search
   if("" === $("input[name='query_id']").val()){
     event.preventDefault();
@@ -85,4 +85,44 @@ $('form#search_form').submit(function(event){
   }else{
     return;
   }
+});
+
+$('div#search_container form#search_form').submit(function(event){
+  // if no query is selected, prevent it from search
+  if("" === $("input[name='query_id']").val()){
+    event.preventDefault();
+    loadQueryList();
+    $('#queryModal').modal('toggle');
+  }else{
+    loadRankResults();
+    event.preventDefault();
+  }
+});
+
+function loadRankResults(){
+  // TODO show up the waiting banner
+  query_id = $("input[name='query_id']").val();
+  url_path = 'rank/' + query_id;
+  $.get(url_path)
+  .done(function(response){
+    //response_json = jQuery.parseJSON(response);
+    rank_list = response.rank_list;
+    for(var i = 0; i < rank_list.length; ++i){
+      msg = 'Rank ' + i + ': ' + rank_list[i].doc_id;
+      console.log(msg);
+    }
+  })
+  .fail(function() {
+    alert("error on posting to rank");
+  })
+  .always(function() {
+    // TODO clear up the waiting banner
+  });
+}
+
+$(document).ready(function(){
+  if(!$('div#search_container form#search_form').length){
+    return;
+  }
+  $('div#search_container form#search_form').submit();
 });

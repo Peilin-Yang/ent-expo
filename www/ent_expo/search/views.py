@@ -60,9 +60,14 @@ def search(request) :
     {'query_id': query_id, 'query_text': query_text},
     context_instance=RequestContext(request))
 
-def rank(request) :
+def gen_snippet(query_id, doc_id, doc_text) :
+  # output the first 100 characeters as snippet at this moment
+  return doc_text[0:100]
+
+def rank(request, query_id) :
   '''
   Return the default ranking list for a given query in JSON format.
+  '''
   '''
   if "POST" != request.method :
     error_msg = 'Only HTTP POST accepted.'
@@ -71,15 +76,31 @@ def rank(request) :
     return HttpResponse(json.dumps(item), content_type="application/json")
   
   query_id = request.POST['query_id']
+  '''
+  
   try :
     query = Query.objects.get(query_id=query_id)
   except Query.DoesNotExist :
-    error_msg = 'Invalid query [%s] : %s' %(query_id, query_text)
+    item = dict()
+    error_msg = 'Invalid query [%s]' % query_id
     item['error'] = error_msg
     return HttpResponse(json.dumps(item), content_type="application/json")
 
   try :
     doc_rank_list = DocRank.objects.filter(query=query)
-  except DocRank.Objects.get() :
+    rank_list = list()
+    for rank_item in doc_rank_list :
+      item = dict()
+      item['doc_id'] = rank_item.doc.pk
+      item['title'] = rank_item.doc.title
+      item['rank'] = int(rank_item.rank)
+      item['snippet'] = gen_snippet(query_id, item['doc_id'], 
+        rank_item.doc.text)
+      rank_list.append(item)
+    rank_list.sort(key=lambda x: x['rank'])
+    response = dict()
+    response['rank_list'] = rank_list
+    return HttpResponse(json.dumps(response), content_type="application/json")
+  except DocRank.DoesNotExist :
     error_msg = 'Invalid query [%s] : %s' %(query_id, query_text)
     return render_to_response('error.html', {'error_message': error_msg})
