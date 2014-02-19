@@ -134,12 +134,35 @@ p.message{
 /*
 /**********************************************************/
 
-div#weight-panel table td{
-    height: 40px;
+table#ent-weight{
+  border: 0px;
 }
 
-div#weight-panel input{
-  width:300px;
+table#ent-weight{
+  width: 80%;
+}
+
+table#ent-weight tr{
+  border: 0px;
+  height: 55px;
+}
+
+table#ent-weight td{
+  vertical-align: center;
+}
+
+table#ent-weight td.ent{
+  text-align: right;
+  padding-right: 25px;
+  width: 40%;
+  font-weight: bold;
+}
+
+table#ent-weight td.weight{
+}
+
+div#weight-panel div.slider{
+  width: 80%;
 }
 
 div#weight-panel .slider-selection{

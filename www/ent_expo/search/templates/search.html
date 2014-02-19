@@ -37,45 +37,55 @@
   </div>
   <div class="col-md-6" id="panel">
     <div id="entity-relation">
-      <h2>Related Entities</h2>
+      <h3>Related Entities</h2>
       <canvas id="c" width="500" height="400" style="margin-top: 20px; border:0px solid #ccc"></canvas>
     </div>
     
     <div id="weight-panel">
-      <h2>Weight Panel</h2>
-      <table border="0" cellpadding="5">
-      <tbody>
-        <tr>
-         <th align="right">illegal immigration:&nbsp;</th>
-          <td align="left">
-              <input id="ex1" data-slider-id='ex1Slider' type="text" data-slider-min="0" data-slider-max="20" data-slider-step="1" data-slider-value="14"/>
-          </td>
-        </tr>
-        <tr>
-          <th align="right">organized crime:&nbsp;</th>
-          <td align="left">
-              <input id="ex1" data-slider-id='ex1Slider' type="text" data-slider-min="0" data-slider-max="20" data-slider-step="1" data-slider-value="14"/>
-          </td>
-        </tr>
-        <tr>
-          <th align="right">human trafficking:&nbsp;</th>
-          <td align="left">
-              <input id="ex1" data-slider-id='ex1Slider' type="text" data-slider-min="0" data-slider-max="20" data-slider-step="1" data-slider-value="14"/>
-          </td>
-        </tr>
-        <tr>
-          <th align="right">golden venture:&nbsp;</th>
-          <td align="left">
-              <input id="ex1" data-slider-id='ex1Slider' type="text" data-slider-min="0" data-slider-max="20" data-slider-step="1" data-slider-value="14"/>
-          </td>
-        </tr>
-        <tr>
-          <th align="right">illegal entry:&nbsp;</th>
-          <td align="left">
-              <input id="ex1" data-slider-id='ex1Slider' type="text" data-slider-min="0" data-slider-max="20" data-slider-step="1" data-slider-value="14"/>
-          </td>
-        </tr>
-      </tbody>
+      <h3>Weight Panel</h2>
+      <table id="ent-weight">
+        <tbody>
+          <tr>
+            <td class="ent">illegal immigration</td>
+            <td class="weight">
+              <b>0.0</b>
+              <input id="ent_0" data-slider-id='ent_0' type="text" data-slider-min="0" data-slider-max="1.0" data-slider-step="0.1" data-slider-value="0.5"/>
+              <b>1.0</b>
+            </td>
+          </tr>
+          <tr>
+            <td class="ent">organized crime</td>
+            <td class="weight">
+              <b>0.0</b>
+              <input id="ent_1" data-slider-id='ent_1' type="text" data-slider-min="0" data-slider-max="1.0" data-slider-step="0.1" data-slider-value="0.5"/>
+              <b>1.0</b>
+            </td>
+          </tr>
+          <tr>
+            <td class="ent">human trafficking</td>
+            <td class="weight">
+              <b>0.0</b>
+              <input id="ent_2" data-slider-id='ent_2' type="text" data-slider-min="0" data-slider-max="1.0" data-slider-step="0.1" data-slider-value="0.5"/>
+              <b>1.0</b>
+            </td>
+          </tr>
+          <tr>
+            <td class="ent">golden venture</td>
+            <td class="weight">
+              <b>0.0</b>
+              <input id="ent_3" data-slider-id='ent_3' type="text" data-slider-min="0" data-slider-max="1.0" data-slider-step="0.1" data-slider-value="0.5"/>
+              <b>1.0</b>
+            </td>
+          </tr>
+          <tr>
+            <td class="ent">illegal entry</td>
+            <td class="weight">
+              <b>0.0</b>
+              <input id="ent_4" data-slider-id='ent_4' type="text" data-slider-min="0" data-slider-max="1.0" data-slider-step="0.1" data-slider-value="0.5"/>
+              <b>1.0</b>
+            </td>
+          </tr>
+        </tbody>
       </table>
     </div>
   </div>

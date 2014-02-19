@@ -214,7 +214,7 @@ canvas.observe('object:out', function(e) {
 $('div#weight-panel input').each(function(){
   $(this).slider({
     formater: function(value) {
-      return value;
+      return value.toFixed(1);
     }
   });
 });
