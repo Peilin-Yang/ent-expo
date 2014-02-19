@@ -5,7 +5,7 @@
   <div class="col-md-2" id="logo">
     <h1>EntEXPO</h1>
   </div>
-  <div class="col-md-8" id="search_form">
+  <div class="col-md-10" id="search_form">
     <form name="search_form" role="form" id="search_form" action="search" method="post">
       {% csrf_token %}
       <div class="row">
@@ -19,6 +19,17 @@
         </div>
       </div>
     </form>
+  </div>
+</div>
+
+<div class="row" id="rank_container">
+  <div class="col-md-6" id="rank_list_wrapper">
+    <p id="loading-info" class="bg-info">Loading results...</p>
+    <p id="rank-summary"></p>
+    <div id="rank_list"></div>
+    <div id="rank_pg"></div>
+  </div>
+  <div class="col-md-6" id="panel">
   </div>
 </div>
 

@@ -61,8 +61,8 @@ def search(request) :
     context_instance=RequestContext(request))
 
 def gen_snippet(query_id, doc_id, doc_text) :
-  # output the first 100 characeters as snippet at this moment
-  return doc_text[0:100]
+  # output the first 250 characeters as snippet at this moment
+  return doc_text[0:250]
 
 def rank(request, query_id) :
   '''

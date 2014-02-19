@@ -56,14 +56,26 @@ div#query_pg{
 /**********************************************************/
 
 div#search_container{
-  width: 90%;
+  width: 96%;
   height: 15%;
   overflow: auto;
-  margin: -20px auto;
+  margin: -20px 0px 10px 0px;
 }
 
 div#search_container div#search_form{
   padding-top: 25px;
+}
+
+div#rank_container p#loading-info{
+  padding: 5px 5px 5px 20px;
+}
+
+div#rank_container div#rank_list_wrapper{
+  padding-left: 15px;
+}
+
+p#rank-summary{
+  margin-bottom: 20px;
 }
 
 /**********************************************************/
@@ -72,7 +84,7 @@ div#search_container div#search_form{
 /*
 /**********************************************************/
 div#footer{
-  width: 100%;
+  width: 96%;
   position: absolute;
   bottom: 0;
 }
