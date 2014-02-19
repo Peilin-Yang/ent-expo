@@ -37,10 +37,22 @@ def document(request, doc_id) :
   except Document.DoesNotExist :
     raise Http404
   item = dict()
-  item['id'] = doc.doc_id
+  item['doc_id'] = doc.doc_id
   item['title'] = doc.title
-  item['text'] = doc.text
-  return HttpResponse(json.dumps(item), content_type="application/json")
+  item['text'] = format_document(doc.text)
+  #return HttpResponse(json.dumps(item), content_type="application/json")
+  return render_to_response('doc.html', {'doc_item': item})
+
+def format_document(doc_text) :
+  '''
+  Apply format to the document
+  '''
+  paragraphs = doc_text.split('\n')
+  p_html_list = list()
+  for p in paragraphs :
+    p_html = '<p class="paragraph">%s</p>' % p
+    p_html_list.append(p_html)
+  return '\n'.join(p_html_list)
 
 def search(request) :
   if "POST" != request.method :
@@ -91,7 +103,8 @@ def rank(request, query_id) :
     rank_list = list()
     for rank_item in doc_rank_list :
       item = dict()
-      item['doc_id'] = rank_item.doc.pk
+      item['doc_pk'] = rank_item.doc.pk
+      item['doc_id'] = rank_item.doc.doc_id
       item['title'] = rank_item.doc.title
       item['rank'] = int(rank_item.rank)
       item['snippet'] = gen_snippet(query_id, item['doc_id'], 

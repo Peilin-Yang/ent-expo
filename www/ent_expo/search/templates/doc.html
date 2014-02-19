@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+  <div class="col-md-8">
+    <h2>{{ doc_item.title }}</h2>
+    <h2><small>{{ doc_item.doc_id }}</small></h2>
+    <div id="doc-wrapper">
+      {{ doc_item.text | safe | escape}}
+    </div>
+  </div>
+  <div class="col-md-4">
+  </div>
+</div>
+{% endblock %}
+
+{% block footer %}
+<script type="text/javascript">
+$(document).ready(function(){
+  // fix the position of footer
+  $('div#footer').css('position', 'relative');
+});
+</script>
+{% endblock %}

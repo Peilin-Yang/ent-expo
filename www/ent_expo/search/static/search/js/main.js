@@ -133,8 +133,11 @@ function loadRankResults(){
           break;
         }
         var rank_item = rank_list[num_per_list * i + j];
-        var snippet_html = '<p class="snippet">' + rank_item.snippet + '</p>';
-        var title_html = '<a href="doc/' + rank_item.doc_id 
+        var doc_meta_html = '<span class="doc-meta"> [' 
+          + rank_item.doc_id + ']</span>';
+        var snippet_html = '<p class="snippet">' + rank_item.snippet 
+          + doc_meta_html + '</p>';
+        var title_html = '<a href="doc/' + rank_item.doc_pk 
           + '" target="_blank"> ' + rank_item.title + '</a>';
         var rank_item_html = '<div class="rank-item" href="#">' + title_html
           +  snippet_html + '</div>';

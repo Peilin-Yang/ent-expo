@@ -103,6 +103,10 @@ div.rank-item a:active {
   color: black;
 }
 
+div.rank-item span.doc-meta{
+  color: #006621;
+}
+
 /**********************************************************/
 /*
 /* Miscellaneous
