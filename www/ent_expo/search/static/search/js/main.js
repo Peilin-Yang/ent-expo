@@ -65,6 +65,14 @@ function loadQueryList(){
         $("input[name='query_id']").val(query_id);
         $("input[name='query_text']").val(query_text);
         $('#queryModal').modal('toggle');
+        
+        if($('div#home_container form#search_form').length){
+          $('div#home_container form#search_form').submit();
+        }
+        if($('div#search_container form#search_form').length){
+          $('div#search_container form#search_form').submit();
+        }
+        
         return false;
       });
     });
@@ -103,6 +111,7 @@ function loadRankResults(){
   // TODO show up the waiting banner
   query_id = $("input[name='query_id']").val();
   url_path = 'rank/' + query_id;
+  $('p#loading-error').hide();
   $('p#loading-info').show();
   
   $.get(url_path)
@@ -125,8 +134,8 @@ function loadRankResults(){
         }
         var rank_item = rank_list[num_per_list * i + j];
         var snippet_html = '<p class="snippet">' + rank_item.snippet + '</p>';
-        var title_html = '<a href="doc/' + rank_item.doc_id + '"> ' 
-          + rank_item.title + '</a>';
+        var title_html = '<a href="doc/' + rank_item.doc_id 
+          + '" target="_blank"> ' + rank_item.title + '</a>';
         var rank_item_html = '<div class="rank-item" href="#">' + title_html
           +  snippet_html + '</div>';
         list_wrapper.append(rank_item_html);
@@ -156,7 +165,7 @@ function loadRankResults(){
     });
     
     $('p#loading-info').hide();
-    var summary = '<p id="rank_summary">Page ' 
+    var summary = '<p id="rank-summary">Page ' 
      + '<span id="cur_rank_page">1</span> of ' + rank_list.length 
      + ' results in total</p>';
     $('p#rank-summary').replaceWith(summary);
@@ -173,8 +182,10 @@ function loadRankResults(){
       return false;
     });
   })
-  .fail(function() {
-    alert("error on posting to rank");
+  .fail(function(response) {
+    msg = 'Oops. An error has occurred: ' + response.error_msg;
+    $('p#loading-error').text(msg).show();
+    $('p#loading-info').hide();
   })
   .always(function() {
     // TODO clear up the waiting banner

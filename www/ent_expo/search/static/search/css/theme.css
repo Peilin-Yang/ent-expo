@@ -70,12 +70,37 @@ div#rank_container p#loading-info{
   padding: 5px 5px 5px 20px;
 }
 
+div#rank_container p#loading-error{
+  padding: 5px 5px 5px 20px;
+}
+
 div#rank_container div#rank_list_wrapper{
   padding-left: 15px;
 }
 
 p#rank-summary{
   margin-bottom: 20px;
+}
+
+div#rank_container div.rank-item{
+  margin: 10px 0px;
+}
+
+div.rank-item p{
+  font-size:0.9em;
+}
+
+div.rank-item a:link, 
+div.rank-item a:visited {
+  font-size:1.1em;
+  margin: 5px 0px;
+  color: #0000ff;
+  text-decoration: underline;
+}
+
+div.rank-item a:hover, 
+div.rank-item a:active {
+  color: black;
 }
 
 /**********************************************************/
@@ -101,4 +126,17 @@ div.message_container{
 p.message{
   padding: 15px;
   margin: 50px 0px;
+}
+
+/**********************************************************/
+/*
+/* Entity Relations
+/*
+/**********************************************************/
+div.slider-container{
+    width: 300px;
+}
+
+div#weight-panel table td{
+    height: 40px;
 }

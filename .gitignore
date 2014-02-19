@@ -1,6 +1,7 @@
 *.swp
 *.swo
 *.pyc
+.DS_Store
 
 env/
 playground/

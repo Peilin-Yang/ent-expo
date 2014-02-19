@@ -72,7 +72,7 @@ def rank(request, query_id) :
   if "POST" != request.method :
     error_msg = 'Only HTTP POST accepted.'
     item = dict()
-    item['error'] = error_msg
+    item['error_msg'] = error_msg
     return HttpResponse(json.dumps(item), content_type="application/json")
   
   query_id = request.POST['query_id']
@@ -83,7 +83,7 @@ def rank(request, query_id) :
   except Query.DoesNotExist :
     item = dict()
     error_msg = 'Invalid query [%s]' % query_id
-    item['error'] = error_msg
+    item['error_msg'] = error_msg
     return HttpResponse(json.dumps(item), content_type="application/json")
 
   try :

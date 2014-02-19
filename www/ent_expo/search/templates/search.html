@@ -1,5 +1,10 @@
 {% extends "base.html" %}
 
+{% block header %}
+{% load staticfiles %}
+<link href="{% static "search/css/jquery.slider.min.css" %}" rel="stylesheet">
+{% endblock %}
+
 {% block content %}
 <div class="row" id="search_container">
   <div class="col-md-2" id="logo">
@@ -25,11 +30,54 @@
 <div class="row" id="rank_container">
   <div class="col-md-6" id="rank_list_wrapper">
     <p id="loading-info" class="bg-info">Loading results...</p>
+    <p id="loading-error" class="bg-danger" style="display: none;"></p>
     <p id="rank-summary"></p>
     <div id="rank_list"></div>
     <div id="rank_pg"></div>
   </div>
   <div class="col-md-6" id="panel">
+    <div id="entity-relation">
+      <h2>Related Entities</h2>
+      <canvas id="c" width="500" height="400" style="margin-top: 20px; border:0px solid #ccc"></canvas>
+    </div>
+    
+    <div id="weight-panel">
+      <h2>Weight Panel</h2>
+      <table border="0" cellpadding="5">
+      <tbody>
+        <tr>
+         <th align="right">illegal immigration:&nbsp;</th>
+          <td align="left">
+              <div class="slider-container"><input class="slider" type="slider" name="rel-ent-1" value="0.7" /></div>
+          </td>
+        </tr>
+        <tr>
+          <th align="right">organized crime:&nbsp;</th>
+          <td align="left">
+              <div class="slider-container"><input class="slider" type="slider" name="rel-ent-1" value="0.3" /></div>
+          </td>
+        </tr>
+        <tr>
+          <th align="right">human trafficking:&nbsp;</th>
+          <td align="left">
+              <div class="slider-container"><input class="slider" type="slider" name="rel-ent-1" value="0.1" /></div>
+          </td>
+        </tr>
+        <tr>
+          <th align="right">golden venture:&nbsp;</th>
+          <td align="left">
+              <div class="slider-container"><input class="slider" type="slider" name="rel-ent-1" value="0.3" /></div>
+          </td>
+        </tr>
+        <tr>
+          <th align="right">illegal entry:&nbsp;</th>
+          <td align="left">
+              <div class="slider-container"><input class="slider" type="slider" name="rel-ent-1" value="0.5" /></div>
+          </td>
+        </tr>
+      </tbody>
+      </table>
+    </div>
   </div>
 </div>
 
@@ -49,4 +97,18 @@
     </div>
   </div>
 </div>
+{% endblock %}
+
+{% block footer %}
+{% load staticfiles %}
+<script src="{% static "search/js/fabric/all.js" %}"></script>
+<!--- http://egorkhmelev.github.io/jslider/ -->
+<script src="{% static "search/js/jquery.min.1.7.1.js" %}"></script>
+<script src="{% static "search/js/jquery.slider.min.js" %}"></script>
+<!--- solve jQuery version conflicts: http://stackoverflow.com/a/1566644 -->
+<script type="text/javascript">
+var jQuery_1_7_1 = $.noConflict(true);
+</script>
+<script src="{% static "search/js/fabric/Delicious_500.font.js" %}"></script>
+<script src="{% static "search/js/draw.js" %}"></script>
 {% endblock %}
