@@ -64,13 +64,13 @@ function loadQueryList(){
         // set the query id and query text in the search box
         $("input[name='query_id']").val(query_id);
         $("input[name='query_text']").val(query_text);
-        $('#queryModal').modal('toggle');
         
         if($('div#home_container form#search_form').length){
           $('div#home_container form#search_form').submit();
         }
         if($('div#search_container form#search_form').length){
           $('div#search_container form#search_form').submit();
+          $('#queryModal').modal('toggle');
         }
         
         return false;

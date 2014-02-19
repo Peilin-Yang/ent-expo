@@ -211,19 +211,10 @@ canvas.observe('object:out', function(e) {
   }
 });
 
-jQuery_1_7_1('.slider').slider({ 
-  from: 0.0, 
-  to: 1.0, 
-  scale: [0.0, 0.2, 0.4, 0.6, 0.8, 1.0], 
-  limits: false, 
-  step: 0.1, 
-  dimension: '',
-  round: 1,
-  format: { 
-      format: '0.#', locale: 'us' 
-  },
-  skin: "plastic", 
-  callback: function( value ){ 
-      console.dir( this ); 
-  } 
+$('div#weight-panel input').each(function(){
+  $(this).slider({
+    formater: function(value) {
+      return value;
+    }
+  });
 });

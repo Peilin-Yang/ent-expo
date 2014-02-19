@@ -133,10 +133,15 @@ p.message{
 /* Entity Relations
 /*
 /**********************************************************/
-div.slider-container{
-    width: 300px;
-}
 
 div#weight-panel table td{
     height: 40px;
+}
+
+div#weight-panel input{
+  width:300px;
+}
+
+div#weight-panel .slider-selection{
+  background: #BABABA;
 }
