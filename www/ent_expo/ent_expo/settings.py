@@ -60,7 +60,8 @@ WSGI_APPLICATION = 'ent_expo.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'xliu_ent_test',
+        #'NAME': 'xliu_ent_test',
+        'NAME': 'xliu_ent_1',
         'USER': 'xliu',
         'PASSWORD': '123',
         'HOST': '127.0.0.1',
