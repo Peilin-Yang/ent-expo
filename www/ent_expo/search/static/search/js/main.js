@@ -2,7 +2,7 @@ function loadQueryList(){
   // first, check whether the query list exist
   if(!$('div#query_list div.ql').length){
     // fetch the query list
-    $.getJSON("query_list", function(data){
+    $.getJSON("api/query_list", function(data){
       // apply pagination on the query list
       var num_per_list = 20;
       var query_sm_info = ' <small>' + data.length + ' queries in total.</small>';
@@ -110,7 +110,7 @@ $('div#search_container form#search_form').submit(function(event){
 function loadRankResults(){
   // TODO show up the waiting banner
   query_id = $("input[name='query_id']").val();
-  url_path = 'rank/' + query_id;
+  url_path = 'api/rank/' + query_id;
   $('p#loading-error').hide();
   $('p#loading-info').show();
   
