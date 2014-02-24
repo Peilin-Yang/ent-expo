@@ -5,6 +5,7 @@ from django.core.urlresolvers import reverse
 from collections import defaultdict
 from search.models import *
 from search.utils import *
+from random import randint
 
 def home(request) :
   return render_to_response('home.html', 
@@ -180,3 +181,49 @@ def api_ent(request, ent_id) :
     entity.abstract = json.loads(entity.abstract)
   item['abstract'] = entity.abstract
   return HttpResponse(json.dumps(item), content_type="application/json")
+
+def api_rerank(request, query_id) :
+  '''
+  Return the re-ranking list for a given query in JSON format based on the 
+  related entity weight list
+  '''
+  if "POST" != request.method :
+    error_msg = 'Only HTTP POST accepted.'
+    item = dict()
+    item['error_msg'] = error_msg
+    return HttpResponse(json.dumps(item), content_type="application/json")
+  
+  ent_weight_list = json.loads(request.POST['ent-weight-list'])
+  
+  try :
+    query = Query.objects.get(query_id=query_id)
+  except Query.DoesNotExist :
+    item = dict()
+    error_msg = 'Invalid query [%s]' % query_id
+    item['error_msg'] = error_msg
+    return HttpResponse(json.dumps(item), content_type="application/json")
+
+  try :
+    doc_rank_list = DocRank.objects.filter(query=query)
+    rank_list = list()
+    for rank_item in doc_rank_list :
+      item = dict()
+      item['doc_pk'] = rank_item.doc.pk
+      item['doc_id'] = rank_item.doc.doc_id
+      item['title'] = rank_item.doc.title
+      # for debug purpose only, generate random list
+      item['rank'] = randint(1,100)
+      # TODO it should be updated once the re-ranking function finished
+      #item['rank'] = int(rank_item.rank)
+      item['snippet'] = gen_snippet(query_id, item['doc_id'], 
+        rank_item.doc.text)
+      rank_list.append(item)
+    rank_list.sort(key=lambda x: x['rank'])
+    response = dict()
+    response['rank_list'] = rank_list
+    return HttpResponse(json.dumps(response), content_type="application/json")
+  except DocRank.DoesNotExist :
+    item = dict()
+    error_msg = 'Document rank list not found [%s] : %s' %(query_id, query_text)
+    item['error_msg'] = error_msg
+    return HttpResponse(json.dumps(item), content_type="application/json")

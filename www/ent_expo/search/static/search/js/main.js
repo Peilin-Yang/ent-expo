@@ -1,4 +1,4 @@
-function loadQueryList(){
+function load_query_list(){
   // first, check whether the query list exist
   if(!$('div#query_list div.ql').length){
     // fetch the query list
@@ -80,7 +80,7 @@ function loadQueryList(){
 }
 
 $("input[name='query_text']").focus(function(){
-  loadQueryList();
+  load_query_list();
   // now show up the modal
   $('#queryModal').modal('toggle');
 });
@@ -89,7 +89,7 @@ $('div#home_container form#search_form').submit(function(event){
   // if no query is selected, prevent it from search
   if("" === $("input[name='query_id']").val()){
     event.preventDefault();
-    loadQueryList();
+    load_query_list();
     $('#queryModal').modal('toggle');
   }else{
     return;
@@ -99,16 +99,84 @@ $('div#home_container form#search_form').submit(function(event){
 $('div#search_container form#search_form').submit(function(event){
   // if no query is selected, prevent it from search
   if("" === $("input[name='query_id']").val()){
-    loadQueryList();
+    load_query_list();
     $('#queryModal').modal('toggle');
     event.preventDefault();
   }else if (0 == $('div#rank_list').children().length){
-    loadRankResults();
+    load_rank_results();
     event.preventDefault();
   }
 });
 
-function loadRankResults(){
+function update_rank_list(rank_list){
+  var num_per_list = 10;
+  var list_num = rank_list.length / num_per_list;
+  
+  // rank lists
+  var rank_list_wrapper = $('<div id="rank_list"></div>');
+  for(var i = 0; i < list_num; ++i){
+    // one list for every num_per_list documents
+    var list_html = '<div class="rank-sub-list" id="rl_' + i + '"></div>';
+    var list_wrapper = $(list_html);
+    
+    for (var j = 0; j < num_per_list; ++j) {
+      if(num_per_list * i + j >= rank_list.length){
+        break;
+      }
+      var rank_item = rank_list[num_per_list * i + j];
+      var doc_meta_html = '<span class="doc-meta"> [' 
+        + rank_item.doc_id + ']</span>';
+      var snippet_html = '<p class="snippet">' + rank_item.snippet 
+        + doc_meta_html + '</p>';
+      var title_html = '<a href="doc/' + rank_item.doc_pk 
+        + '" target="_blank"> ' + rank_item.title + '</a>';
+      var rank_item_html = '<div class="rank-item" href="#">' + title_html
+        +  snippet_html + '</div>';
+      list_wrapper.append(rank_item_html);
+    }
+    
+    rank_list_wrapper.append(list_wrapper);
+  }
+  $('div#rank_list').replaceWith(rank_list_wrapper);
+  
+  // pagination
+  var ul_item = '<ul class="pagination" id="rank_pg"></ul>';
+  var pg_list = $(ul_item);
+  for(var i = 0; i < list_num; ++i){
+    var li_item = '<li><a href="#" attr="' + i + '">' + (i + 1) + '</a></li>';
+    pg_list.append(li_item);
+  }
+  
+  $('div#rank_pg').empty().append(pg_list);
+  
+  // initialization
+  $('div.rank-sub-list').hide();
+  $('div#rl_0').show();
+  $('ul#rank_pg li').each(function(index){
+    if("0" == $(this).find('a').attr('attr')){
+      $(this).addClass('active');
+    }
+  });
+  
+  var summary = '<p id="rank-summary">Page ' 
+   + '<span id="cur_rank_page">1</span> of ' + rank_list.length 
+   + ' results in total</p>';
+  $('p#rank-summary').replaceWith(summary);
+  
+  // event handling setup
+  $('ul#rank_pg li a').click(function(){
+    var index = $(this).attr('attr');
+    var rl_id = 'div#rl_' + index;
+    $('div.rank-sub-list').hide();
+    $(rl_id).show();
+    $('ul#rank_pg li.active').removeClass('active');
+    $(this).parent().addClass('active');
+    $('span#cur_rank_page').text(parseInt(index) + 1);
+    return false;
+  });
+}
+
+function load_rank_results(){
   query_id = $("input[name='query_id']").val();
   url_path = 'api/rank/' + query_id;
   $('p#loading-error').hide();
@@ -117,72 +185,7 @@ function loadRankResults(){
   
   $.get(url_path)
   .done(function(response){
-    var rank_list = response.rank_list;
-    var num_per_list = 10;
-    var list_num = rank_list.length / num_per_list;
-    
-    // rank lists
-    var rank_list_wrapper = $('<div id="rank_list"></div>');
-    for(var i = 0; i < list_num; ++i){
-      // one list for every num_per_list documents
-      var list_html = '<div class="rank-sub-list" id="rl_' + i + '"></div>';
-      var list_wrapper = $(list_html);
-      
-      for (var j = 0; j < num_per_list; ++j) {
-        if(num_per_list * i + j >= rank_list.length){
-          break;
-        }
-        var rank_item = rank_list[num_per_list * i + j];
-        var doc_meta_html = '<span class="doc-meta"> [' 
-          + rank_item.doc_id + ']</span>';
-        var snippet_html = '<p class="snippet">' + rank_item.snippet 
-          + doc_meta_html + '</p>';
-        var title_html = '<a href="doc/' + rank_item.doc_pk 
-          + '" target="_blank"> ' + rank_item.title + '</a>';
-        var rank_item_html = '<div class="rank-item" href="#">' + title_html
-          +  snippet_html + '</div>';
-        list_wrapper.append(rank_item_html);
-      }
-      
-      rank_list_wrapper.append(list_wrapper);
-    }
-    $('div#rank_list').replaceWith(rank_list_wrapper);
-    
-    // pagination
-    var ul_item = '<ul class="pagination" id="rank_pg"></ul>';
-    var pg_list = $(ul_item);
-    for(var i = 0; i < list_num; ++i){
-      var li_item = '<li><a href="#" attr="' + i + '">' + (i + 1) + '</a></li>';
-      pg_list.append(li_item);
-    }
-    
-    $('div#rank_pg').empty().append(pg_list);
-    
-    // initialization
-    $('div.rank-sub-list').hide();
-    $('div#rl_0').show();
-    $('ul#rank_pg li').each(function(index){
-      if("0" == $(this).find('a').attr('attr')){
-        $(this).addClass('active');
-      }
-    });
-    
-    var summary = '<p id="rank-summary">Page ' 
-     + '<span id="cur_rank_page">1</span> of ' + rank_list.length 
-     + ' results in total</p>';
-    $('p#rank-summary').replaceWith(summary);
-    
-    // event handling setup
-    $('ul#rank_pg li a').click(function(){
-      var index = $(this).attr('attr');
-      var rl_id = 'div#rl_' + index;
-      $('div.rank-sub-list').hide();
-      $(rl_id).show();
-      $('ul#rank_pg li.active').removeClass('active');
-      $(this).parent().addClass('active');
-      $('span#cur_rank_page').text(parseInt(index) + 1);
-      return false;
-    });
+    update_rank_list(response.rank_list);
   })
   .fail(function(response) {
     msg = 'Oops. An error has occurred: ' + response.error_msg;

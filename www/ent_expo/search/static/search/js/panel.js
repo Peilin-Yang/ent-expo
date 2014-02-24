@@ -1,4 +1,4 @@
-var canvas_width = 500;
+var canvas_width = 400;
 var canvas_height = 300;
 var cir_rad = 16;
 var rel_ent_color = '#3385FF';
@@ -6,8 +6,7 @@ var qry_ent_color = '#ED2A34';
 var hover_strock_color = '#111111';
 var hover_strock_width = 5;
 var canvas = null;
-
-canvas = new fabric.Canvas('c', { selection: false });
+var rel_ent_weight_list;
 
 function init_query_ent_coords(num_ent){
   var coords = new Array();
@@ -185,7 +184,7 @@ function load_rel_ent_list(){
       };
       rel_ent_list.push(rel_ent);
     }
-    
+    $('p#loading-ent-info').hide();
     init_ent_canvas(qry_ent_list, rel_ent_list);
     init_weight_panel(rel_ent_list);
   })
@@ -199,6 +198,11 @@ function load_rel_ent_list(){
 }
 
 function init_ent_canvas(qry_ent_list, rel_ent_list){
+  var canvas_html = 
+    $('<canvas id="ent-graph" width="400" height="300"></canvas>');
+  $('div#entity-relation').append(canvas_html);
+  canvas = new fabric.Canvas('ent-graph', { selection: false });
+  
   // first, load the related entites
   qry_ent_coords = init_query_ent_coords(qry_ent_list.length);
   rel_ent_coords = init_rel_ent_coords(rel_ent_list.length);
@@ -292,16 +296,67 @@ function ent_selected(e){
   update_ent_infobox(ent_id);
 }
 
-function init_weight_panel(){
+function init_weight_panel(rel_ent_list){
   /*
   * Initialize the weight panel with jquery.slider on bootstrap
   */
+  
+  var slider_template = '\
+  <tr>\
+    <td class="ent">${name}</td>\
+    <td class="weight">\
+      <b>0.0</b>\
+      <input data-slider-id="${id}" type="text" data-slider-min="0" \
+        data-slider-max="1.0" data-slider-step="0.1" data-slider-value="0.5"/>\
+      <b>1.0</b>\
+    </td>\
+  </tr>'
+  
+  for(var idx in rel_ent_list){
+    $.tmpl(slider_template, { 'name': rel_ent_list[idx].name, 
+      'id': rel_ent_list[idx].id }).appendTo('table#ent-weight tbody');
+  }
+          
   $('div#weight-panel input').each(function(){
     $(this).slider({
       formater: function(value) {
         return value.toFixed(1);
       }
     });
+  }).on('slide', update_ret_list);
+}
+
+function update_ret_list(slideEvt){
+  /*
+  * Update the ranking results with the re-weighted related entities
+  */
+  // first, clear the related entity weight list
+  rel_ent_weight_list = new Array();
+  // then, update it with the new weight
+  $('div#weight-panel input').each(function(){
+    var ent_id = $(this).attr('data-slider-id');
+    var weight = $(this).slider('getValue');
+    rel_ent_weight_list.push({
+      id: ent_id,
+      weight: weight.toFixed(1)
+    });
+  });
+  weight_json_str = JSON.stringify(rel_ent_weight_list);
+  console.log(weight_json_str);
+  $("input[name='ent-weight-list']").val(weight_json_str);
+  
+  query_id = $("input[name='query_id']").val();
+  url_path = 'api/rerank/' + query_id;
+  $.post(url_path, $('form#ent-weight-form').serialize())
+  .done(function(response){
+    update_rank_list(response.rank_list);
+  })
+  .fail(function(response) {
+    msg = 'Oops. An error has occurred: ' + response.error_msg;
+    $('p#loading-error').text(msg).show();
+  })
+  .always(function() {
+    $('p#loading-info').hide();
   });
 }
 
@@ -315,14 +370,14 @@ function update_ent_infobox(ent_id){
       <tr>\
         <th>Name</th>\
         <th>Value\
-          <button type="button" class="close" id="close-ent-infobox">&times;\
-          </button></th>\
+          <button title="click to close" type="button" class="close"\
+          id="close-ent-infobox">&times;</button></th>\
       </tr>\
       </thead>\
       </table>');
       
-    $.tmpl( '<tr><td>DBpedia</td><td><a target="_blank" href="${uri}">\
-      ${name}</a></td></tr>', { 'name':  response.name, 
+    $.tmpl( '<tr><td>DBpedia URI</td><td><a target="_blank" href="${uri}">\
+      ${uri}</a></td></tr>', { 'name':  response.name, 
       'uri': response.uri}).appendTo(ent_infobox_table);
     var infobox_hash = response.infobox;
     for(var predicate in infobox_hash){
@@ -353,7 +408,7 @@ function update_ent_infobox(ent_id){
 
 $(document).ready(function(){
   setTimeout(load_rel_ent_list, 500);
-  $.tmpl( '<p>${test}</p>', { 'test' : 'jQuery \
+  $.tmpl('<p>${test}</p>', { 'test' : 'jQuery \
     template works.' }).appendTo('div#footer');
 });
 

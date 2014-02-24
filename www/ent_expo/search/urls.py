@@ -16,4 +16,6 @@ urlpatterns = patterns('',
     name='search_ent_list'),
   url(r'^api/ent/(?P<ent_id>\d+)$', 'search.views.api_ent', \
     name='search_ent'),
+  url(r'^api/rerank/(?P<query_id>\d+)$', 'search.views.api_rerank', \
+    name='search_rerank'),
 )

@@ -7,10 +7,10 @@
 
 {% block content %}
 <div class="row" id="search_container">
-  <div class="col-md-2" id="logo">
+  <div class="col-md-3" id="logo">
     <h1>EntEXPO</h1>
   </div>
-  <div class="col-md-10" id="search_form">
+  <div class="col-md-9" id="search_form">
     <form name="search_form" role="form" id="search_form" action="search" method="post">
       {% csrf_token %}
       <div class="row">
@@ -38,7 +38,6 @@
   <div class="col-md-6" id="panel">
     <div id="entity-relation">
       <h3>Related Entities</h3>
-      <canvas id="c" width="500" height="300" style="margin-top: 20px; border:0px solid #ccc"></canvas>
       <p id="loading-ent-info" class="bg-info">Loading entities...</p>
       <p id="loading-ent-error" class="bg-danger" style="display: none;"></p>
     </div>
@@ -49,49 +48,13 @@
       <h3>Weight Panel</h3>
       <table id="ent-weight">
         <tbody>
-          <tr>
-            <td class="ent">illegal immigration</td>
-            <td class="weight">
-              <b>0.0</b>
-              <input id="ent_0" data-slider-id='ent_0' type="text" data-slider-min="0" data-slider-max="1.0" data-slider-step="0.1" data-slider-value="0.5"/>
-              <b>1.0</b>
-            </td>
-          </tr>
-          <tr>
-            <td class="ent">organized crime</td>
-            <td class="weight">
-              <b>0.0</b>
-              <input id="ent_1" data-slider-id='ent_1' type="text" data-slider-min="0" data-slider-max="1.0" data-slider-step="0.1" data-slider-value="0.5"/>
-              <b>1.0</b>
-            </td>
-          </tr>
-          <tr>
-            <td class="ent">human trafficking</td>
-            <td class="weight">
-              <b>0.0</b>
-              <input id="ent_2" data-slider-id='ent_2' type="text" data-slider-min="0" data-slider-max="1.0" data-slider-step="0.1" data-slider-value="0.5"/>
-              <b>1.0</b>
-            </td>
-          </tr>
-          <tr>
-            <td class="ent">golden venture</td>
-            <td class="weight">
-              <b>0.0</b>
-              <input id="ent_3" data-slider-id='ent_3' type="text" data-slider-min="0" data-slider-max="1.0" data-slider-step="0.1" data-slider-value="0.5"/>
-              <b>1.0</b>
-            </td>
-          </tr>
-          <tr>
-            <td class="ent">illegal entry</td>
-            <td class="weight">
-              <b>0.0</b>
-              <input id="ent_4" data-slider-id='ent_4' type="text" data-slider-min="0" data-slider-max="1.0" data-slider-step="0.1" data-slider-value="0.5"/>
-              <b>1.0</b>
-            </td>
-          </tr>
         </tbody>
       </table>
     </div>
+    <form id="ent-weight-form">
+      {% csrf_token %}
+      <input type="hidden" name="ent-weight-list" id="ent-weight-list" value="false" />
+    </form>
   </div>
 </div>
 
