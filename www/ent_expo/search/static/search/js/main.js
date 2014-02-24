@@ -117,7 +117,6 @@ function loadRankResults(){
   
   $.get(url_path)
   .done(function(response){
-    //response_json = jQuery.parseJSON(response);
     var rank_list = response.rank_list;
     var num_per_list = 10;
     var list_num = rank_list.length / num_per_list;
@@ -168,7 +167,6 @@ function loadRankResults(){
       }
     });
     
-    $('p#loading-info').hide();
     var summary = '<p id="rank-summary">Page ' 
      + '<span id="cur_rank_page">1</span> of ' + rank_list.length 
      + ' results in total</p>';
@@ -189,10 +187,9 @@ function loadRankResults(){
   .fail(function(response) {
     msg = 'Oops. An error has occurred: ' + response.error_msg;
     $('p#loading-error').text(msg).show();
-    $('p#loading-info').hide();
   })
   .always(function() {
-    // TODO clear up the waiting banner
+    $('p#loading-info').hide();
   });
 }
 

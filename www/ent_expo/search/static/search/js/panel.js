@@ -1,9 +1,13 @@
 var canvas_width = 500;
-var canvas_height = 400;
+var canvas_height = 300;
 var cir_rad = 16;
 var rel_ent_color = '#3385FF';
 var qry_ent_color = '#ED2A34';
+var hover_strock_color = '#111111';
+var hover_strock_width = 5;
 var canvas = null;
+
+canvas = new fabric.Canvas('c', { selection: false });
 
 function init_query_ent_coords(num_ent){
   var coords = new Array();
@@ -41,6 +45,11 @@ function init_query_ent_coords(num_ent){
     }
     coords.push(point);
   }
+  // round up the float numbers to int
+  //for(var i = 0; i < coords.length; ++i){
+    //coords[i].x = Math.round(coords[i].x);
+    //coords[i].y = Math.round(coords[i].y);
+  //}
   return coords;
 }
 
@@ -50,28 +59,28 @@ function init_rel_ent_coords(num_ent){
    // two on the top
    var point = {
      x: canvas_width / 5,
-     y: canvas_height / 4
+     y: canvas_height / 5
    }
    coords.push(point);
    var point = {
      x: canvas_width / 5 * 4,
-     y: canvas_height / 4
+     y: canvas_height / 5
    }
    coords.push(point);
    // three on the bottom
    var point = {
      x: canvas_width / 6,
-     y: canvas_height / 4 * 3
+     y: canvas_height / 5 * 4
    }
    coords.push(point);
    var point = {
      x: canvas_width / 6 * 3,
-     y: canvas_height / 4 * 3
+     y: canvas_height / 5 * 4
    }
    coords.push(point);
    var point = {
      x: canvas_width / 6 * 5,
-     y: canvas_height / 4 * 3
+     y: canvas_height / 5 * 4
    }
    coords.push(point);
    
@@ -79,30 +88,38 @@ function init_rel_ent_coords(num_ent){
    for(var i = 0; i < num_ent; ++i){
      ret_coords.push(coords[i]);
    }
+   
+   // round up the float numbers to int
+   //for(var i = 0; i < ret_coords.length; ++i){
+     //ret_coords[i].x = Math.round(ret_coords[i].x);
+     //ret_coords[i].y = Math.round(ret_coords[i].y);
+   //}
    return ret_coords;
 }
 
-function makeCircle(canvas, coord, text, color, attr, flip) {
+function makeCircle(coord, text, color, attr, flip) {
   var c = new fabric.Circle({
     left: coord.x,
     top: coord.y,
-    strokeWidth: 0,
+    strokeWidth: 1,
     radius: cir_rad,
     fill: color,
     stroke: color
   });
   c.hasControls = c.hasBorders = false;
   c.attr = attr;
+  c.set('lockMovementX', true);
+  c.set('lockMovementY', true);
   
   if(true == flip){
-    makeText(canvas, coord.x + 30, coord.y - 40, text);
+    makeText(coord.x + 30, coord.y - 30, text);
   }else{
-    makeText(canvas, coord.x + 30, coord.y + 40, text)
+    makeText(coord.x + 30, coord.y + 30, text)
   }
   canvas.add(c);
 }
 
-function makeLine(canvas, p1, p2) {
+function makeLine(p1, p2) {
   coords = [p1.x, p1.y, p2.x, p2.y];
   line = new fabric.Line(coords, {
     fill: '#989898',
@@ -112,12 +129,13 @@ function makeLine(canvas, p1, p2) {
   canvas.add(line);
 }
 
-function makeText(canvas, left, top, text) {
+function makeText(left, top, text) {
   text = new fabric.Text(text, { 
     fontFamily: 'Delicious_500', 
     left: left, 
     top: top,
-    fontSize: 16 
+    fontSize: 16,
+    selectable: false
   });
   canvas.add(text);
 }
@@ -131,7 +149,6 @@ function load_rel_ent_list(){
   
   $.get(url_path)
   .done(function(response){
-    //response_json = jQuery.parseJSON(response);
     var rank_list = response.rank_list;
     var qry_ent_hash = new Object();
     
@@ -170,14 +187,14 @@ function load_rel_ent_list(){
     }
     
     init_ent_canvas(qry_ent_list, rel_ent_list);
+    init_weight_panel(rel_ent_list);
   })
   .fail(function(response) {
     msg = 'Oops. An error has occurred: ' + response.error_msg;
     $('p#loading-ent-error').text(msg).show();
-    $('p#loading-ent-info').hide();
   })
   .always(function() {
-    // TODO clear up the waiting banner
+    $('p#loading-ent-info').hide();
   });
 }
 
@@ -186,26 +203,24 @@ function init_ent_canvas(qry_ent_list, rel_ent_list){
   qry_ent_coords = init_query_ent_coords(qry_ent_list.length);
   rel_ent_coords = init_rel_ent_coords(rel_ent_list.length);
   
-  canvas = new fabric.Canvas('c', { selection: false });
-  
   for(var i = 0; i < rel_ent_coords.length; ++i){
     qry_ent_idx = rel_ent_list[i].qry_ent_idx;
-    makeLine(canvas, qry_ent_coords[qry_ent_idx], rel_ent_coords[i]);
+    makeLine(qry_ent_coords[qry_ent_idx], rel_ent_coords[i]);
   }
   
   for(var i = 0; i < qry_ent_coords.length; ++i){
-    makeCircle(canvas, qry_ent_coords[i], qry_ent_list[i].name, 
+    makeCircle(qry_ent_coords[i], qry_ent_list[i].name, 
       qry_ent_color, 'qry-ent-' + qry_ent_list[i].id, true);
   }
   
   for(var i = 0; i < rel_ent_coords.length; ++i){
-    makeCircle(canvas, rel_ent_coords[i], rel_ent_list[i].name, 
+    makeCircle(rel_ent_coords[i], rel_ent_list[i].name, 
       rel_ent_color, 'rel-ent-' + rel_ent_list[i].id, i < 2);
   }
 
   // piggyback on `canvas.findTarget`, to fire "object:over" 
   // and "object:out" events
-
+  
   canvas.findTarget = (function(originalFn) {
     return function() {
       var target = originalFn.apply(this, arguments);
@@ -225,20 +240,20 @@ function init_ent_canvas(qry_ent_list, rel_ent_list){
       return target;
     };
   })(canvas.findTarget);
+  
 
   // now we can observe "object:over" and "object:out" events
-  // in this example, object is set to red color on hover over and 
-  // green color on hover out
-
   canvas.observe('object:over', ent_hover_over);
   canvas.observe('object:out', ent_hover_out);
+  canvas.observe('object:selected', ent_selected);
 }
 
 function ent_hover_over(e){
-  e.memo.target.setStrokeWidth(5);
-  e.memo.target.setStroke('#111111');
+  e.memo.target.setStrokeWidth(hover_strock_width);
+  e.memo.target.setStroke(hover_strock_color);
   canvas.renderAll();
 
+  // use fill color to determine whether it is query entity or related entity
   var fill = e.memo.target.getFill();
   if(qry_ent_color == fill){
     $('span.query-ent').attr(
@@ -256,9 +271,11 @@ function ent_hover_over(e){
 function ent_hover_out(e){
   var fill = e.memo.target.getFill();
   e.memo.target.setStrokeWidth(1);
-  e.memo.target.setStroke(fill);  
+  e.memo.target.setStroke(fill);
   canvas.renderAll();
 
+  // use fill color to determine whether it is query entity or related entity
+  //var fill = e.memo.target.getFill();
   if(qry_ent_color == fill){
     var color =  $('span.query-ent').attr('prev-bg-color');
     $('span.query-ent').css('background-color', color);
@@ -268,14 +285,49 @@ function ent_hover_out(e){
   }
 }
 
-/*
-* Initialize the weight panel with jquery.slider on bootstrap
-*/
-$('div#weight-panel input').each(function(){
-  load_rel_ent_list();
-  $(this).slider({
-    formater: function(value) {
-      return value.toFixed(1);
-    }
+function ent_selected(e){
+  var id = e.memo.target.attr;
+  console.log('object:selected: ' + id);
+}
+
+function init_weight_panel(){
+  /*
+  * Initialize the weight panel with jquery.slider on bootstrap
+  */
+  $('div#weight-panel input').each(function(){
+    $(this).slider({
+      formater: function(value) {
+        return value.toFixed(1);
+      }
+    });
   });
+}
+
+function update_ent_panel(ent_id){
+  query_id = $("input[name='query_id']").val();
+  url_path = 'api/ent_list/' + query_id;
+  $('p#loading-ent-error').hide();
+  // show up the waiting banner
+  $('p#loading-ent-info').show();
+  
+  $.get(url_path)
+  .done(function(response){
+    //response_json = jQuery.parseJSON(response);
+    var rank_list = response.rank_list;
+
+  })
+  .fail(function(response) {
+    msg = 'Oops. An error has occurred: ' + response.error_msg;
+    console.log(msg);
+  })
+  .always(function() {
+  });
+}
+
+$(document).ready(function(){
+  setTimeout(load_rel_ent_list, 500);
+  $.tmpl( "<p>${Name}</p>", { "Name" : "jQuery template works." }).appendTo('div#footer');
 });
+
+
+
