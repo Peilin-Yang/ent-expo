@@ -37,7 +37,7 @@ var str5 = 'illegal entry';
 
 var cir_rad = 16;
 var rel_ent_color = '#3385FF';
-var qry_ent_color = '#ED2A34';
+var query_ent_color = '#ED2A34';
 
 var canvas = new fabric.Canvas('c', { selection: false });
 
@@ -82,8 +82,8 @@ function makeQueryCircle(left, top, text, line1, line2, line3,
     top: top,
     strokeWidth: 0,
     radius: cir_rad,
-    fill: qry_ent_color,
-    stroke: qry_ent_color
+    fill: query_ent_color,
+    stroke: query_ent_color
   });
   c.hasControls = c.hasBorders = false;
 
@@ -183,7 +183,7 @@ canvas.observe('object:over', function(e) {
   canvas.renderAll();
   
   var fill = e.memo.target.getFill();
-  if(qry_ent_color == fill){
+  if(query_ent_color == fill){
     $('span.query-ent').attr(
         'prev-bg-color', $('span.query-ent').css('background-color'));
     $('span.query-ent').css('background-color', fill);
@@ -202,7 +202,7 @@ canvas.observe('object:out', function(e) {
   e.memo.target.setStroke(fill);  
   canvas.renderAll();
   
-  if(qry_ent_color == fill){
+  if(query_ent_color == fill){
     var color =  $('span.query-ent').attr('prev-bg-color');
     $('span.query-ent').css('background-color', color);
   }else if(rel_ent_color == fill){
@@ -211,6 +211,9 @@ canvas.observe('object:out', function(e) {
   }
 });
 
+/*
+* Initialize the weight panel with jquery.slider on bootstrap
+*/
 $('div#weight-panel input').each(function(){
   $(this).slider({
     formater: function(value) {
