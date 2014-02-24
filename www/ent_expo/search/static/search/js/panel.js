@@ -286,8 +286,10 @@ function ent_hover_out(e){
 }
 
 function ent_selected(e){
-  var id = e.memo.target.attr;
-  console.log('object:selected: ' + id);
+  var attr = e.memo.target.attr;
+  var ent_id = attr.split('-').pop();
+  console.log('object:selected: ' + ent_id);
+  update_ent_infobox(ent_id);
 }
 
 function init_weight_panel(){
@@ -303,18 +305,43 @@ function init_weight_panel(){
   });
 }
 
-function update_ent_panel(ent_id){
-  query_id = $("input[name='query_id']").val();
-  url_path = 'api/ent_list/' + query_id;
-  $('p#loading-ent-error').hide();
-  // show up the waiting banner
-  $('p#loading-ent-info').show();
-  
+function update_ent_infobox(ent_id){
+  url_path = 'api/ent/' + ent_id;
   $.get(url_path)
   .done(function(response){
-    //response_json = jQuery.parseJSON(response);
-    var rank_list = response.rank_list;
-
+    var ent_infobox_table = $('<table id="ent_infobox" class="table \
+      table-hover table-condensed">\
+      <thead>\
+      <tr>\
+        <th>Name</th>\
+        <th>Value\
+          <button type="button" class="close" id="close-ent-infobox">&times;\
+          </button></th>\
+      </tr>\
+      </thead>\
+      </table>');
+      
+    $.tmpl( '<tr><td>DBpedia</td><td><a target="_blank" href="${uri}">\
+      ${name}</a></td></tr>', { 'name':  response.name, 
+      'uri': response.uri}).appendTo(ent_infobox_table);
+    var infobox_hash = response.infobox;
+    for(var predicate in infobox_hash){
+      var value = infobox_hash[predicate];
+      var name = predicate.split('\/').pop();
+      $.tmpl( '<tr><td>${name}</td><td>${value}</td></tr>',
+        { 'name':  name, 'value': value}).appendTo(ent_infobox_table);
+    }
+    var abstract = response.abstract;
+    if('' !== abstract){
+      name = 'Abstract';
+      value = abstract;
+      $.tmpl( '<tr><td>${name}</td><td>${value}</td></tr>',
+        { 'name':  name, 'value': value}).appendTo(ent_infobox_table);
+    }
+    $('table#ent_infobox').replaceWith(ent_infobox_table);
+    $('table#ent_infobox button#close-ent-infobox').click(function(){
+      $('table#ent_infobox').hide();
+    })
   })
   .fail(function(response) {
     msg = 'Oops. An error has occurred: ' + response.error_msg;
@@ -326,8 +353,7 @@ function update_ent_panel(ent_id){
 
 $(document).ready(function(){
   setTimeout(load_rel_ent_list, 500);
-  $.tmpl( "<p>${Name}</p>", { "Name" : "jQuery template works." }).appendTo('div#footer');
+  $.tmpl( '<p>${test}</p>', { 'test' : 'jQuery \
+    template works.' }).appendTo('div#footer');
 });
-
-
 
