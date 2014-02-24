@@ -44,7 +44,7 @@ function init_query_ent_coords(num_ent){
   return coords;
 }
 
-function init_rel_ent_coords(){
+function init_rel_ent_coords(num_ent){
    var coords = new Array();
    // there are always 5 related entities
    // two on the top
@@ -74,7 +74,12 @@ function init_rel_ent_coords(){
      y: canvas_height / 4 * 3
    }
    coords.push(point);
-   return coords;
+   
+   var ret_coords = new Array();
+   for(var i = 0; i < num_ent; ++i){
+     ret_coords.push(coords[i]);
+   }
+   return ret_coords;
 }
 
 function makeCircle(canvas, coord, text, color, attr, flip) {
@@ -117,32 +122,85 @@ function makeText(canvas, left, top, text) {
   canvas.add(text);
 }
 
-function init_ent_canvas(){
-  query_ent_coords = init_query_ent_coords(1);
-  rel_ent_coords = init_rel_ent_coords();
-
-  var query_ent_array = new Array();
-  query_ent_array.push('human smuggling');
+function load_rel_ent_list(){
+  query_id = $("input[name='query_id']").val();
+  url_path = 'api/ent_list/' + query_id;
+  $('p#loading-ent-error').hide();
+  // show up the waiting banner
+  $('p#loading-ent-info').show();
   
-  var rel_ent_array = new Array();
-  rel_ent_array.push('illegal immigration');
-  rel_ent_array.push('organized crime');
-  rel_ent_array.push('human trafficking');
-  rel_ent_array.push('golden venture');
-  rel_ent_array.push('illegal entry');
+  $.get(url_path)
+  .done(function(response){
+    //response_json = jQuery.parseJSON(response);
+    var rank_list = response.rank_list;
+    var qry_ent_hash = new Object();
+    
+    // collect all the query entities
+    for(var i = 0; i < rank_list.length; ++i){
+      var rank_item = rank_list[i];
+      qry_ent_hash[rank_item.query_ent_uri] = {
+        uri: rank_item.query_ent_uri,
+        name: rank_item.query_ent_name,
+        id: rank_item.query_ent_id
+      };
+    }
+    
+    var qry_ent_list = new Array();
+    for(var qry_ent in qry_ent_hash){
+      qry_ent_list.push(qry_ent_hash[qry_ent]);
+    }
+    
+    // re-map each query entity to an index in qent_array
+    var qry_ent_idx_hash = new Object();
+    for(var i = 0; i < qry_ent_list.length; ++i){
+      var uri = qry_ent_list[i].uri;
+      qry_ent_idx_hash[uri] = i;
+    }
+    
+    var rel_ent_list = new Array();
+    for(var i = 0; i < rank_list.length; ++i){
+      var rank_item = rank_list[i];
+      rel_ent = {
+        uri: rank_item.ent_uri,
+        name: rank_item.ent_name,
+        id: rank_item.ent_id,
+        qry_ent_idx: qry_ent_idx_hash[rank_item.query_ent_uri]
+      };
+      rel_ent_list.push(rel_ent);
+    }
+    
+    init_ent_canvas(qry_ent_list, rel_ent_list);
+  })
+  .fail(function(response) {
+    msg = 'Oops. An error has occurred: ' + response.error_msg;
+    $('p#loading-ent-error').text(msg).show();
+    $('p#loading-ent-info').hide();
+  })
+  .always(function() {
+    // TODO clear up the waiting banner
+  });
+}
+
+function init_ent_canvas(qry_ent_list, rel_ent_list){
+  // first, load the related entites
+  qry_ent_coords = init_query_ent_coords(qry_ent_list.length);
+  rel_ent_coords = init_rel_ent_coords(rel_ent_list.length);
   
   canvas = new fabric.Canvas('c', { selection: false });
   
   for(var i = 0; i < rel_ent_coords.length; ++i){
-    makeLine(canvas, query_ent_coords[0], rel_ent_coords[i]);
+    qry_ent_idx = rel_ent_list[i].qry_ent_idx;
+    makeLine(canvas, qry_ent_coords[qry_ent_idx], rel_ent_coords[i]);
   }
-
-  makeCircle(canvas, query_ent_coords[0], query_ent_array[0], qry_ent_color, 
-    null, true);
+  
+  for(var i = 0; i < qry_ent_coords.length; ++i){
+    makeCircle(canvas, qry_ent_coords[i], qry_ent_list[i].name, 
+      qry_ent_color, 'qry-ent-' + qry_ent_list[i].id, true);
+  }
   
   for(var i = 0; i < rel_ent_coords.length; ++i){
-    makeCircle(canvas, rel_ent_coords[i], rel_ent_array[i], 
-      rel_ent_color, 'rel-ent-' + i, i < 2);
+    makeCircle(canvas, rel_ent_coords[i], rel_ent_list[i].name, 
+      rel_ent_color, 'rel-ent-' + rel_ent_list[i].id, i < 2);
   }
 
   // piggyback on `canvas.findTarget`, to fire "object:over" 
@@ -214,7 +272,7 @@ function ent_hover_out(e){
 * Initialize the weight panel with jquery.slider on bootstrap
 */
 $('div#weight-panel input').each(function(){
-  init_ent_canvas();
+  load_rel_ent_list();
   $(this).slider({
     formater: function(value) {
       return value.toFixed(1);

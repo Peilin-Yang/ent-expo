@@ -108,10 +108,10 @@ $('div#search_container form#search_form').submit(function(event){
 });
 
 function loadRankResults(){
-  // TODO show up the waiting banner
   query_id = $("input[name='query_id']").val();
   url_path = 'api/rank/' + query_id;
   $('p#loading-error').hide();
+  // show up the waiting banner
   $('p#loading-info').show();
   
   $.get(url_path)

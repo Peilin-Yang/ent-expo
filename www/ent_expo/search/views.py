@@ -148,6 +148,7 @@ def api_ent_list(request, query_id) :
       item['predicate'] = rank_item.predicate
       item['query_ent_id'] = rank_item.query_ent.pk
       item['query_ent_uri'] = rank_item.query_ent.uri
+      item['query_ent_name'] = rank_item.query_ent.name
       item['link_type'] = rank_item.link_type
       rank_list.append(item)
     rank_list.sort(key=lambda x: x['ent_rank'])
