@@ -101,10 +101,11 @@ $('div#search_container form#search_form').submit(function(event){
   if("" === $("input[name='query_id']").val()){
     loadQueryList();
     $('#queryModal').modal('toggle');
-  }else{
+    event.preventDefault();
+  }else if (0 == $('div#rank_list').children().length){
     loadRankResults();
+    event.preventDefault();
   }
-  event.preventDefault();
 });
 
 function loadRankResults(){
