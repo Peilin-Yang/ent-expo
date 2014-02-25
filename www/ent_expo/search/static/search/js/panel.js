@@ -347,6 +347,10 @@ function update_ret_list(slideEvt){
   
   query_id = $("input[name='query_id']").val();
   url_path = 'api/rerank/' + query_id;
+  $('p#loading-error').hide();
+  // show up the waiting banner
+  $('p#loading-info').show();
+  
   $.post(url_path, $('form#ent-weight-form').serialize())
   .done(function(response){
     update_rank_list(response.rank_list);
@@ -365,7 +369,7 @@ function update_ent_infobox(ent_id){
   $.get(url_path)
   .done(function(response){
     var ent_infobox_table = $('<table id="ent_infobox" class="table \
-      table-hover table-condensed">\
+      table-condensed">\
       <thead>\
       <tr>\
         <th>Name</th>\

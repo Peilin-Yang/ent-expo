@@ -186,6 +186,7 @@ function load_rank_results(){
   $.get(url_path)
   .done(function(response){
     update_rank_list(response.rank_list);
+    $('div#footer').show();
   })
   .fail(function(response) {
     msg = 'Oops. An error has occurred: ' + response.error_msg;
@@ -196,12 +197,20 @@ function load_rank_results(){
   });
 }
 
+function isiPad(){
+  return (navigator.userAgent.indexOf("iPad") != -1);
+}
+
 $(document).ready(function(){
+  // disable input on iPad to prevent keyboard popup
+  if(isiPad()){
+    $("input[name='query_text']").attr('readonly', 'true');
+  }
   if(!$('div#search_container form#search_form').length){
     return;
   }
   $('div#search_container form#search_form').submit();
   
   // fix the position of footer
-  $('div#footer').css('position', 'relative');
+  $('div#footer').hide().css('position', 'relative');
 });

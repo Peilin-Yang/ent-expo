@@ -104,7 +104,7 @@ div.rank-item a:active {
 }
 
 div.rank-item span.doc-meta{
-  color: #006621;
+  color: #009933;
 }
 
 /**********************************************************/
@@ -137,6 +137,14 @@ p.message{
 /* Entity Relations
 /*
 /**********************************************************/
+
+div#entity-relation p#loading-ent-info{
+  padding: 5px 5px 5px 20px;
+}
+
+div#entity-relation p#loading-ent-error{
+  padding: 5px 5px 5px 20px;
+}
 
 table#ent-weight{
   border: 0px;
@@ -176,4 +184,15 @@ div#weight-panel .slider-selection{
 canvas#ent-graph{
   margin-top: 0px; 
   border:0px solid #ccc;
+}
+
+/*
+* HTML TD wrap text: http://stackoverflow.com/a/10799399
+*/
+table#ent_infobox{
+  table-layout: fixed;
+}
+
+table#ent_infobox td{
+  word-wrap: break-word;
 }

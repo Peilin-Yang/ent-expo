@@ -204,7 +204,18 @@ def api_rerank(request, query_id) :
     return HttpResponse(json.dumps(item), content_type="application/json")
 
   try :
+    ent_rank_list = EntRank.objects.filter(query=query)
+  except EntRank.DoesNotExist :
+    item = dict()
+    error_msg = 'Entity rank list not found [%s] : %s' %(query_id, query_text)
+    item['error_msg'] = error_msg
+    return HttpResponse(json.dumps(item), content_type="application/json")
+    
+  try :
     doc_rank_list = DocRank.objects.filter(query=query)
+    rank_dict = entity_centric_doc_rank(query, ent_rank_list, ent_weight_list, 
+      doc_rank_list)
+    
     rank_list = list()
     for rank_item in doc_rank_list :
       item = dict()
@@ -212,10 +223,11 @@ def api_rerank(request, query_id) :
       item['doc_id'] = rank_item.doc.doc_id
       item['title'] = rank_item.doc.title
       # for debug purpose only, generate random list
-      item['rank'] = randint(1,100)
+      #item['rank'] = randint(1,100)
       # TODO it should be updated once the re-ranking function finished
       #item['rank'] = int(rank_item.rank)
-      item['snippet'] = gen_snippet(query_id, item['doc_id'], 
+      item['rank'] = rank_dict[item['doc_id']]
+      item['snippet'] = gen_snippet(query, item['doc_id'], 
         rank_item.doc.text)
       rank_list.append(item)
     rank_list.sort(key=lambda x: x['rank'])
