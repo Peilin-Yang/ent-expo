@@ -62,6 +62,10 @@ div#search_container{
   margin: -20px 0px 10px 0px;
 }
 
+div#search_container h1 a{
+  text-decoration: none;
+}
+
 div#search_container div#search_form{
   padding-top: 25px;
 }
