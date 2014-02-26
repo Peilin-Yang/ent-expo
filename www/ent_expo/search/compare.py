@@ -8,6 +8,12 @@ from search.utils import *
 def load_compare_baseline(query_id):
   try :
     query = Query.objects.get(query_id=query_id)
+
+    rel_dict = {}
+    doc_rel_list = DocMap.objects.filter(query=query)
+    for doc_item in doc_rel_list :
+      doc_id = doc_item.doc.doc_id
+      rel_dict[doc_id] = int(doc_item.is_rel)
   except Query.DoesNotExist :
     error_msg = 'Invalid query [%s]' % query_id
     return False, error_msg
@@ -21,6 +27,7 @@ def load_compare_baseline(query_id):
       item['doc_id'] = rank_item.doc.doc_id
       item['title'] = rank_item.doc.title
       item['rank'] = int(rank_item.rank)
+      item['is_rel'] = rel_dict[item['doc_id']]
       item['snippet'] = gen_snippet(query_id, item['doc_id'], 
         rank_item.doc.text)
       rank_list.append(item)

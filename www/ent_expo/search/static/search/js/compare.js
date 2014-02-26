@@ -1,4 +1,4 @@
-function update_compare_page(div_name, rank_list, show_rank_diff){
+function update_compare_page(div_name, rank_list, is_baseline, show_rank_diff){
   var num_per_list = 10;
   var list_num = rank_list.length / num_per_list;
   
@@ -21,19 +21,28 @@ function update_compare_page(div_name, rank_list, show_rank_diff){
         + doc_meta_html + '</p>';
       var title_html = '<a href="doc/' + rank_item.doc_pk 
         + '" target="_blank"> ' + (global_idx+1) + ". " + rank_item.title + '</a>';
+
+      if (is_baseline) {
+        if (rank_item.is_rel > 0) {
+          title_html += '<i class="fa fa-check-circle-o" style="color:green;"></i>';
+        } else {
+          title_html += '<i class="fa fa-times-circle-o" style="color:red;"></i>';
+        }
+      }
+
       if (show_rank_diff) {
         title_html += '(' + rank_item.rank_diff + ')';
         if (rank_item.is_rel > 0) {
 
           if (parseInt(rank_item.rank_diff) > 0) {
             title_html += '<i class="fa fa-arrow-up" style="color:green;"></i>';
-          } else {
+          } else if (parseInt(rank_item.rank_diff) < 0) {
             title_html += '<i class="fa fa-arrow-down" style="color:red;"></i>';
           }
         } else {
           if (parseInt(rank_item.rank_diff) > 0) {
             title_html += '<i class="fa fa-arrow-up" style="color:orange;"></i>';
-          } else {
+          } else if (parseInt(rank_item.rank_diff) < 0) {
             title_html += '<i class="fa fa-arrow-down" style="color:cyan;"></i>';
           }  
         }
@@ -105,8 +114,8 @@ $("body").on("click", "button#compare-btn", function(event){
       $('div#original-ranking-list').hide();
       $('div#original-panel').hide();
 
-      update_compare_page("compare-ranking-list-left", data.rank_list[0], false);
-      update_compare_page("compare-ranking-list-right", data.rank_list[1], true);
+      update_compare_page("compare-ranking-list-left", data.rank_list[0], true, false);
+      update_compare_page("compare-ranking-list-right", data.rank_list[1], false, true);
       setup_pagination("compare-ranking-list-left", data.rank_list[0]);
       setup_pagination("compare-ranking-list-right", data.rank_list[1]);
 
