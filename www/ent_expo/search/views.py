@@ -247,7 +247,7 @@ def api_compare(request, query_id) :
   Compare the re-ranking list (based on the related entity weight list) with 
   the baseline (weights are pre-defined).
   '''
-  ent_weight_list = json.loads(request.GET.get('ent-weight-list'))
+  ent_weight_list = json.loads(request.GET.get('paras'))
 
   state_baseline, baseline = load_compare_baseline(query_id)
   state_second, second = load_compare_second(query_id, ent_weight_list)
@@ -258,7 +258,7 @@ def api_compare(request, query_id) :
     return HttpResponse(json.dumps({'error_msg': second}), content_type="application/json")
 
   second = compare(baseline, second)
-  print second
+  #print second
   response = {'rank_list':[baseline, second]}
 
   return HttpResponse(json.dumps(response), content_type="application/json")

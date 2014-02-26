@@ -35,7 +35,7 @@
     <div class="col-md-12">
       <div id="compare-heading" class="row">
         <div class="col-md-3">
-          <p class="bg-info">Comparing with Baseline</p>
+          <p class="text-muted"><i class="fa">Baseline </i><i class="fa fa-angle-double-left fa-1g"></i> | <i class="fa fa-angle-double-right fa-1g"> Parameterized Results</i></p>
         </div>
         <div class="col-md-8">
           <ul id="compare-header-list">
@@ -45,12 +45,25 @@
             <li><i class="fa fa-arrow-down" style="color:cyan;">decrease non-relevant</i></li>
           </ul>
         </div>
-        <button id="compare-close" type="button" class="close" aria-hidden="true" data-toggle="tooltip" data-placement="bottom" title="click to close results comparison">&times;</button>
+        <button id="compare-close" type="button" class="close" aria-hidden="true" data-toggle="tooltip" data-placement="bottom" title="click to close results comparison"><i class="fa fa-times"></i></button>
       </div>
 
       <p id="compare-rank-summary"></p>
 
-      <p id="loading-compare-list-info" class="bg-info">Loading Results...</p>
+      <div class="row" id="loading-compare-list-info">
+        <div class="col-md-1"></div>
+        <div class="col-md-2">
+          <p class="bg-info">Loading Results...</p>
+        </div>
+        <div class="col-md-6">
+          <div class="progress progress-striped active">
+            <div class="progress-bar"  role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 75%">
+              <span class="sr-only">75% Complete</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <p id="loading-compare-list-error" class="bg-danger"></p>
 
       <p id="compare-no-para-hint" class="bg-danger">Please modify the parameters before comparison!</p>
@@ -103,7 +116,7 @@
 
   <div class="row">
     <div class="col-md-4"></div>
-    <div id="compare_pagination"></div>
+    <div id="compare-pagination"></div>
   </div>
 
 </div>

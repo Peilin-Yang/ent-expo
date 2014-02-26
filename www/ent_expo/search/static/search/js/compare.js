@@ -63,19 +63,19 @@ function setup_pagination(div_name, rank_list){
   // pagination
   var num_per_list = 10;
   var list_num = rank_list.length / num_per_list;
-  var ul_item = '<ul class="pagination" id="compare_pagination"></ul>';
+  var ul_item = '<ul class="pagination" id="compare-pagination"></ul>';
   var pg_list = $(ul_item);
   for(var i = 0; i < list_num; ++i){
     var li_item = '<li><a href="#" attr="' + i + '">' + (i + 1) + '</a></li>';
     pg_list.append(li_item);
   }
   
-  $('div#compare_pagination').empty().append(pg_list);
+  $('div#compare-pagination').empty().append(pg_list);
   
   // initialization
   $('div[id^='+div_name+'_rl_'+']').hide();
   $('div[id^='+div_name+'_rl_0'+']').show();
-  $('ul#compare_pagination li').each(function(index){
+  $('ul#compare-pagination li').each(function(index){
     if("0" == $(this).find('a').attr('attr')){
       $(this).addClass('active');
     }
@@ -93,26 +93,40 @@ $("body").on("click", "button#compare-btn", function(event){
   var query_id = $("input[name='query_id']").val();
   var url_path = 'api/compare/' + query_id;
 
+  // first, clear the related entity weight list
+  rel_ent_weight_list = new Array();
+  // then, update it with the new weight
+  $('div#weight-panel input').each(function(){
+    var ent_id = $(this).attr('data-slider-id');
+    var weight = $(this).slider('getValue');
+    rel_ent_weight_list.push({
+      id: ent_id,
+      weight: weight.toFixed(1)
+    });
+  });
+  weight_json_str = JSON.stringify(rel_ent_weight_list);
+
+  /*
   if ($('#ent-weight-list').attr('value') == "false") {
     $('p#compare-no-para-hint').show();
     return;
   }
+  */
 
-  $.getJSON(url_path, $('form#ent-weight-form').serialize(), 
-    function() {
-      $('p#loading-compare-list-error').hide();
-      // show up the waiting banner
-      $('p#loading-compare-list-info').show();
-    })
+  $('#loading-compare-list-error').hide();
+  // show up the waiting banner
+  $('#loading-compare-list-info').show();
+
+  $('div#original-ranking-list').hide();
+  $('div#original-panel').hide();
+
+  $.getJSON(url_path, {'paras':weight_json_str})
     .done(function(data) {
       //console.log( "get compare results success" );
       $('div#compare-heading').show();
       $('div#compare-ranking-list-left').show();
       $('div#compare-ranking-list-right').show();
-      $('div#compare-pagination').show();
-
-      $('div#original-ranking-list').hide();
-      $('div#original-panel').hide();
+      $('#compare-pagination').show();
 
       update_compare_page("compare-ranking-list-left", data.rank_list[0], true, false);
       update_compare_page("compare-ranking-list-right", data.rank_list[1], false, true);
@@ -120,7 +134,7 @@ $("body").on("click", "button#compare-btn", function(event){
       setup_pagination("compare-ranking-list-right", data.rank_list[1]);
 
       // event handling setup
-      $('ul#compare_pagination li a').click(function(){
+      $('ul#compare-pagination li a').click(function(){
         var index = $(this).attr('attr');
         var rl_id1 = 'div[id^='+'compare-ranking-list-left'+'_rl_'+index+']';
         var rl_id2 = 'div[id^='+'compare-ranking-list-right'+'_rl_'+index+']';
@@ -128,7 +142,7 @@ $("body").on("click", "button#compare-btn", function(event){
         $('div[id^='+'compare-ranking-list-right_rl_'+']').hide();
         $(rl_id1).show();
         $(rl_id2).show();
-        $('ul#compare_pagination li.active').removeClass('active');
+        $('ul#compare-pagination li.active').removeClass('active');
         $(this).parent().addClass('active');
         $('span#compare-cur_rank_page').text(parseInt(index) + 1);
         return false;
@@ -141,7 +155,7 @@ $("body").on("click", "button#compare-btn", function(event){
     })
     .always(function() {
       //console.log( "get compare complete" );
-      $('p#loading-compare-list-info').hide();
+      $('#loading-compare-list-info').hide();
     });
 });
 
@@ -151,9 +165,10 @@ $("body").on("click", "button#compare-close", function(event){
   $('div#compare-ranking-list-left').hide();
   $('div#compare-ranking-list-right').hide();
   $('p#loading-compare-list-error').hide();
-  $('p#loading-compare-list-info').hide();
+  $('#loading-compare-list-info').hide();
   $('p#compare-no-para-hint').hide();
-  $('div#compare-pagination').hide();
+  $('p#compare-rank-summary').hide();
+  $('#compare-pagination').hide();
 
   $('div#original-ranking-list').show();
   $('div#original-panel').show();
@@ -165,9 +180,10 @@ $(document).ready(function(){
   $('div#compare-ranking-list-left').hide();
   $('div#compare-ranking-list-right').hide();
   $('p#loading-compare-list-error').hide();
-  $('p#loading-compare-list-info').hide();
+  $('#loading-compare-list-info').hide();
   $('p#compare-no-para-hint').hide();
-  $('div#compare-pagination').hide();
+  $('p#compare-rank-summary').hide();
+  $('#compare-pagination').hide();
 
   $('#compare-close').tooltip();
   //$('#compare-btn').tooltip();
