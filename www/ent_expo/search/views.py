@@ -5,6 +5,7 @@ from django.core.urlresolvers import reverse
 from collections import defaultdict
 from search.models import *
 from search.utils import *
+from search.compare import *
 from random import randint
 
 def home(request) :
@@ -239,3 +240,25 @@ def api_rerank(request, query_id) :
     error_msg = 'Document rank list not found [%s] : %s' %(query_id, query_text)
     item['error_msg'] = error_msg
     return HttpResponse(json.dumps(item), content_type="application/json")
+
+
+def api_compare(request, query_id) :
+  '''
+  Compare the re-ranking list (based on the related entity weight list) with 
+  the baseline (weights are pre-defined).
+  '''
+  ent_weight_list = json.loads(request.GET.get('ent-weight-list'))
+
+  state_baseline, baseline = load_compare_baseline(query_id)
+  state_second, second = load_compare_second(query_id, ent_weight_list)
+
+  if not state_baseline:
+    return HttpResponse(json.dumps({'error_msg': baseline}), content_type="application/json")
+  if not state_second:
+    return HttpResponse(json.dumps({'error_msg': second}), content_type="application/json")
+
+  second = compare(baseline, second)
+  print second
+  response = {'rank_list':[baseline, second]}
+
+  return HttpResponse(json.dumps(response), content_type="application/json")

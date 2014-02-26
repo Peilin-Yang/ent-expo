@@ -1,8 +1,10 @@
 {% extends "base.html" %}
+{% load i18n %}
 
 {% block header %}
 {% load staticfiles %}
 <link href="{% static "search/css/slider.css" %}" rel="stylesheet">
+<link rel="stylesheet" href="{% static "search/font-awesome/css/font-awesome.min.css" %}">
 {% endblock %}
 
 {% block content %}
@@ -21,6 +23,7 @@
         </div>
         <div class="col-md-4">
           <input type="submit" class="btn btn-primary" Value="Search"/>
+          <button type="button" id="compare-btn" class="btn btn-info" data-toggle="tooltip" data-placement="bottom" title="Tune Parameters and Compare"> {% trans 'Compare' %}</button>
         </div>
       </div>
     </form>
@@ -28,34 +31,81 @@
 </div>
 
 <div class="row" id="rank_container">
-  <div class="col-md-6" id="rank_list_wrapper">
-    <p id="loading-info" class="bg-info">Loading results...</p>
-    <p id="loading-error" class="bg-danger" style="display: none;"></p>
-    <p id="rank-summary"></p>
-    <div id="rank_list"></div>
-    <div id="rank_pg"></div>
-  </div>
-  <div class="col-md-6" id="panel">
-    <div id="entity-relation">
-      <h3>Related Entities</h3>
-      <p id="loading-ent-info" class="bg-info">Loading entities...</p>
-      <p id="loading-ent-error" class="bg-danger" style="display: none;"></p>
+  <div class="row">
+    <div class="col-md-12">
+      <div id="compare-heading" class="row">
+        <div class="col-md-3">
+          <p class="bg-info">Comparing with Baseline</p>
+        </div>
+        <div class="col-md-8">
+          <ul id="compare-header-list">
+            <li><i class="fa fa-arrow-up" style="color:green;">boost relevant</i></li>
+            <li><i class="fa fa-arrow-up" style="color:orange;">boost non-relevant</i></li>
+            <li><i class="fa fa-arrow-down" style="color:red;">decrease relevant</i></li>
+            <li><i class="fa fa-arrow-down" style="color:cyan;">decrease non-relevant</i></li>
+          </ul>
+        </div>
+        <button id="compare-close" type="button" class="close" aria-hidden="true" data-toggle="tooltip" data-placement="bottom" title="click to close results comparison">&times;</button>
+      </div>
+
+      <p id="compare-rank-summary"></p>
+
+      <p id="loading-compare-list-info" class="bg-info">Loading Results...</p>
+      <p id="loading-compare-list-error" class="bg-danger"></p>
+
+      <p id="compare-no-para-hint" class="bg-danger">Please modify the parameters before comparison!</p>
     </div>
-    
-    <div id="ent-panel"><table id="ent_infobox"></table></div>
-    
-    <div id="weight-panel">
-      <h3>Weight Panel</h3>
-      <table id="ent-weight">
-        <tbody>
-        </tbody>
-      </table>
-    </div>
-    <form id="ent-weight-form">
-      {% csrf_token %}
-      <input type="hidden" name="ent-weight-list" id="ent-weight-list" value="false" />
-    </form>
   </div>
+
+  <div class="row">
+    <div class="col-md-6" id="rank_list_wrapper">
+      <div id="original-ranking-list">
+        <p id="loading-info" class="bg-info">Loading results...</p>
+        <p id="loading-error" class="bg-danger" style="display: none;"></p>
+        <p id="rank-summary"></p>
+        <div id="rank_list"></div>
+        <div id="rank_pg"></div>
+      </div>
+      <div id="compare-ranking-list-left">
+
+      </div>
+    </div>
+
+    <div class="col-md-6" id="panel">
+      <div id="original-panel">
+        <div id="entity-relation">
+          <h3>Related Entities</h3>
+          <p id="loading-ent-info" class="bg-info">Loading entities...</p>
+          <p id="loading-ent-error" class="bg-danger" style="display: none;"></p>
+        </div>
+        
+        <div id="ent-panel"><table id="ent_infobox"></table></div>
+        
+        <div id="weight-panel">
+          <h3>Weight Panel</h3>
+          <table id="ent-weight">
+            <tbody>
+            </tbody>
+          </table>
+        </div>
+        <form id="ent-weight-form">
+          {% csrf_token %}
+          <input type="hidden" name="ent-weight-list" id="ent-weight-list" value="false" />
+        </form>
+      </div>
+
+      <div class="col-md-4"></div>
+      <div id="compare-ranking-list-right">
+
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-4"></div>
+    <div id="compare_pagination"></div>
+  </div>
+
 </div>
 
 <!-- Query Modal -->
@@ -82,4 +132,5 @@
 <script src="{% static "search/js/fabric/Delicious_500.font.js" %}"></script>
 <script src="{% static "search/js/bootstrap-slider.js" %}"></script>
 <script src="{% static "search/js/panel.js" %}"></script>
+<script src="{% static "search/js/compare.js" %}"></script>
 {% endblock %}

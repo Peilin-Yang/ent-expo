@@ -200,3 +200,34 @@ table#ent_infobox{
 table#ent_infobox td{
   word-wrap: break-word;
 }
+
+
+/*
+* Compare Related - Peilin
+*/
+
+div#compare-heading{
+  padding: 0px 15px 0px 15px;
+}
+
+button#compare-close{
+  padding-right: 5px;
+}
+
+#compare-ranking-list-right{
+  margin-left: -18px;
+  padding-left: 10px;
+  border-left-width: 2px;
+  border-left-color: #aaaaaa;
+  border-left-style: solid;
+}
+
+#compare-header-list{
+  margin-left: -20px;
+}
+
+#compare-header-list li{
+  display: inline;
+  list-style-type: none;
+  padding-right: 10px;
+}

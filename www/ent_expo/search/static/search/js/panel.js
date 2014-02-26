@@ -330,6 +330,10 @@ function update_ret_list(slideEvt){
   /*
   * Update the ranking results with the re-weighted related entities
   */
+
+  // Hide the compare error hint - Peilin
+  $('p#compare-no-para-hint').hide();
+
   // first, clear the related entity weight list
   rel_ent_weight_list = new Array();
   // then, update it with the new weight
